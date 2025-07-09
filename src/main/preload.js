@@ -1,95 +1,47 @@
-const { contextBridge, ipcRenderer } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron');
 
-/**
- * 安全的 IPC 通道名称列表
- */
-const VALID_CHANNELS = [
-  'recording-started',
-  'recording-stopped',
-  'hide-window',
-  'set-recording-state',
-  'start-recording',
-  'stop-recording',
-  'result-data',
-]
+// 定义安全的、允许通信的事件通道列表
+const VALID_CHANNELS = ['toggle-recording', 'recording-state-changed'];
 
-/**
- * 验证 IPC 通道名称
- * @param {string} channel - IPC 通道名称
- * @throws {Error} 如果通道名称无效
- */
-function validateChannel(channel) {
-  if (!VALID_CHANNELS.includes(channel)) {
-    throw new Error(`Invalid IPC channel: ${channel}`)
-  }
-}
-
-/**
- * 暴露安全的 API 给渲染进程
- */
-contextBridge.exposeInMainWorld('electronAPI', {
-  // 录音控制
-  startRecording: async () => {
-    validateChannel('recording-started')
-    await ipcRenderer.invoke('recording-started')
-    ipcRenderer.send('set-recording-state', true)
-  },
-
-  stopRecording: async () => {
-    validateChannel('recording-stopped')
-    await ipcRenderer.invoke('recording-stopped')
-    ipcRenderer.send('set-recording-state', false)
-  },
-
-  // 窗口控制
-  hideWindow: () => {
-    validateChannel('hide-window')
-    ipcRenderer.send('hide-window')
-  },
-
-  // 监听主进程事件
-  onStartRecording: (callback) => {
-    validateChannel('start-recording')
-    ipcRenderer.on('start-recording', (event, ...args) => callback(...args))
-  },
-
-  onStopRecording: (callback) => {
-    validateChannel('stop-recording')
-    ipcRenderer.on('stop-recording', (event, ...args) => callback(...args))
-  },
-
-  onResultData: (callback) => {
-    validateChannel('result-data')
-    ipcRenderer.on('result-data', (event, ...args) => callback(...args))
-  },
-
-  // 移除监听器
-  removeAllListeners: (channel) => {
-    validateChannel(channel)
-    ipcRenderer.removeAllListeners(channel)
-  },
-})
-
-/**
- * 暴露语音识别API
- */
-contextBridge.exposeInMainWorld('speechAPI', {
-  // 检查浏览器是否支持语音识别
-  isSupported: () => {
-    return 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window
-  },
-
-  // 创建语音识别实例
-  createRecognition: () => {
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition()
-      recognition.continuous = true
-      recognition.interimResults = true
-      recognition.lang = 'zh-CN'
-      return recognition
+// 通过 contextBridge 暴露一个安全的、精简版的 ipcRenderer 给渲染进程
+contextBridge.exposeInMainWorld('ipcRenderer', {
+  /**
+   * 向主进程发送消息
+   * @param {string} channel - 通道名称
+   * @param {*} data - 发送的数据
+   */
+  send: (channel, data) => {
+    if (VALID_CHANNELS.includes(channel)) {
+      ipcRenderer.send(channel, data);
     }
-    return null
   },
-})
+
+  /**
+   * 监听从主进程发来的消息
+   * @param {string} channel - 通道名称
+   * @param {Function} listener - 事件处理函数
+   */
+  on: (channel, listener) => {
+    if (VALID_CHANNELS.includes(channel)) {
+      // 创建一个新的函数来包装原始监听器，以避免暴露 Electron 的 `event` 对象
+      const subscription = (event, ...args) => listener(...args);
+      ipcRenderer.on(channel, subscription);
+
+      // 返回一个取消订阅的函数，方便在组件卸载时清理
+      return () => {
+        ipcRenderer.removeListener(channel, subscription);
+      };
+    }
+  },
+
+  /**
+   * 移除指定的监听器
+   * @param {string} channel - 通道名称
+   * @param {Function} listener - 要移除的事件处理函数
+   */
+  removeListener: (channel, listener) => {
+    if (VALID_CHANNELS.includes(channel)) {
+      ipcRenderer.removeListener(channel, listener);
+    }
+  },
+});

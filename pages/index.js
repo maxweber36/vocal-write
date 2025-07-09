@@ -51,6 +51,12 @@ export default function Home() {
   /**
    * Toggles the recording state and handles text polishing.
    */
+  useEffect(() => {
+    if (window.ipcRenderer) {
+      window.ipcRenderer.send('recording-state-changed', isRecording);
+    }
+  }, [isRecording]);
+
   const toggleRecording = useCallback(() => {
     if (isRecording) {
       asrToggleRecording((finalTranscript) => {
@@ -63,21 +69,18 @@ export default function Home() {
   }, [isRecording, asrToggleRecording, handlePolishText])
 
   useEffect(() => {
-    const handleStartRecording = () => toggleRecording()
+    const handleToggleRecording = () => {
+      toggleRecording();
+    };
 
     if (window.ipcRenderer) {
-      window.ipcRenderer.on('start-recording', handleStartRecording)
+      const unsubscribe = window.ipcRenderer.on(
+        'toggle-recording',
+        handleToggleRecording
+      );
+      return unsubscribe; // 在组件卸载时清理监听器
     }
-
-    return () => {
-      if (window.ipcRenderer) {
-        window.ipcRenderer.removeListener(
-          'start-recording',
-          handleStartRecording
-        )
-      }
-    }
-  }, [toggleRecording])
+  }, [toggleRecording]);
 
   return (
     <div className="flex flex-col items-center justify-between min-h-screen bg-gray-100 text-gray-700 p-4 sm:p-6 md:p-8">
@@ -91,10 +94,10 @@ export default function Home() {
         <div className="flex flex-col gap-2">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-800">
             欢迎使用
-            <span className="text-blue-500"> 语音输入</span>
+            <span className="text-blue-500"> 快记说</span>
           </h1>
-          <p className="text-base sm:text-lg text-gray-500">
-            点击下方的麦克风按钮，即刻将您的声音转为文字
+          <p className="text-base sm:text-lg text-gray-500 mt-3">
+            语音输入，自动润色，轻松记录每一刻
           </p>
         </div>
 

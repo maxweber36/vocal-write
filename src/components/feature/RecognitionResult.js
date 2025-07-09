@@ -18,7 +18,7 @@ const RecognitionResult = ({
           {!displayText && !interimTranscript && (
             <span className="text-gray-400">识别结果将显示在这里...</span>
           )}
-          {displayText && <span>{displayText}</span>}
+          {displayText && <span className="text-gray-500">{displayText}</span>}
           <span className="text-gray-400">{interimTranscript}</span>
         </div>
       )}

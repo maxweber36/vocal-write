@@ -27,10 +27,11 @@ function createWindow() {
     width: 400,
     height: 800,
     show: true,
-    frame: false,
+    frame: true,
     movable: true,
     alwaysOnTop: true,
-    transparent: true,
+    transparent: false,
+    backgroundColor: '#ffffff',
     resizable: false,
     webPreferences: {
       nodeIntegration: false,
@@ -40,7 +41,7 @@ function createWindow() {
   })
 
   const startUrl = isDev
-    ? 'http://localhost:8889'
+    ? 'http://localhost:8890'
     : `file://${path.join(__dirname, '../../out/index.html')}`
 
   mainWindow.loadURL(startUrl)
@@ -79,29 +80,7 @@ function createTray() {
     tray = new Tray(nativeImage.createEmpty())
   }
 
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: '显示窗口',
-      click: () => {
-        showMainWindow()
-      },
-    },
-    {
-      label: '开始录音 (⌥+Space)',
-      click: () => {
-        startRecording()
-      },
-    },
-    { type: 'separator' },
-    {
-      label: '退出',
-      click: () => {
-        app.quit()
-      },
-    },
-  ])
-
-  tray.setContextMenu(contextMenu)
+  updateTrayMenu()
   tray.setToolTip('Vocal Write - 语音转文字工具')
 
   // 点击托盘图标显示窗口
@@ -128,18 +107,53 @@ function showMainWindow() {
 /**
  * 开始录音
  */
-function startRecording() {
-  isRecording = true
-  showMainWindow()
-  mainWindow.webContents.send('start-recording')
+/**
+ * 切换录音状态
+ */
+function toggleRecording() {
+  if (mainWindow) {
+    if (mainWindow.isVisible()) {
+      mainWindow.webContents.send('toggle-recording')
+      mainWindow.focus()
+    } else {
+      // If window is hidden, wait for it to be shown before sending the message.
+      showMainWindow()
+      mainWindow.once('show', () => {
+        mainWindow.webContents.send('toggle-recording')
+      })
+      mainWindow.focus()
+    }
+  }
 }
 
 /**
- * 停止录音
+ * 更新托盘菜单
  */
-function stopRecording() {
-  isRecording = false
-  mainWindow.webContents.send('stop-recording')
+function updateTrayMenu() {
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: '显示窗口',
+      click: () => {
+        showMainWindow()
+      },
+    },
+    {
+      label: isRecording ? '停止录音 (⌘+R)' : '开始录音 (⌘+R)',
+      accelerator: 'Command+R',
+      click: () => {
+        toggleRecording()
+      },
+    },
+    { type: 'separator' },
+    {
+      label: '退出',
+      click: () => {
+        app.quit()
+      },
+    },
+  ])
+
+  tray.setContextMenu(contextMenu)
 }
 
 /**
@@ -147,12 +161,9 @@ function stopRecording() {
  */
 function registerGlobalShortcuts() {
   // 注册 Option+Space 热键
-  const ret = globalShortcut.register('Alt+Space', () => {
-    if (isRecording) {
-      stopRecording()
-    } else {
-      startRecording()
-    }
+  // 注册 Command+R 热键
+  const ret = globalShortcut.register('Command+R', () => {
+    toggleRecording()
   })
 
   if (!ret) {
@@ -161,6 +172,11 @@ function registerGlobalShortcuts() {
 }
 
 // 应用事件处理
+ipcMain.on('recording-state-changed', (event, newIsRecording) => {
+  isRecording = newIsRecording
+  updateTrayMenu()
+})
+
 app.whenReady().then(() => {
   createWindow()
   createTray()
@@ -188,10 +204,12 @@ app.on('will-quit', () => {
 // IPC 事件处理
 ipcMain.handle('recording-started', () => {
   isRecording = true
+  updateTrayMenu() // 更新托盘菜单
 })
 
 ipcMain.handle('recording-stopped', () => {
   isRecording = false
+  updateTrayMenu() // 更新托盘菜单
 })
 
 ipcMain.handle('hide-window', () => {
