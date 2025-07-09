@@ -40,7 +40,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'Qwen/Qwen3-30B-A3B',
+        model: 'THUDM/GLM-4-32B-0414',
         messages: [
           {
             role: 'user',
