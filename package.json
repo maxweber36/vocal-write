@@ -1,0 +1,69 @@
+{
+  "name": "vocal-write",
+  "version": "1.0.0",
+  "main": "src/main/main.js",
+  "homepage": "./",
+  "scripts": {
+    "dev": "concurrently \"npm run next-dev\" \"wait-on http://localhost:8890 && npm run electron-dev\"",
+    "next-dev": "next dev -p 8890",
+    "electron-dev": "electron .",
+    "build": "next build",
+    "electron-pack": "electron-builder",
+    "preelectron-pack": "npm run build",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "electron",
+    "nextjs",
+    "voice",
+    "speech-to-text"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "Mac端语音转文字工具",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "crypto-js": "^4.2.0",
+    "electron-is-dev": "^2.0.0",
+    "next": "^14.2.3",
+    "react": "^18.2.0",
+    "react-diff-viewer": "^3.1.1",
+    "react-dom": "^18.2.0",
+    "react-spinners": "^0.17.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.0",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.9.1",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "postcss": "^8.4.38",
+    "prettier": "^3.2.5",
+    "tailwindcss": "^3.4.3",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.vocal-write.app",
+    "productName": "Vocal Write",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/main/**/*",
+      "out/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "extraResources": [
+      {
+        "from": "src/assets",
+        "to": "assets"
+      }
+    ]
+  }
+}
