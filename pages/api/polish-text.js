@@ -67,7 +67,7 @@ export default async function handler(req, res) {
         .json({ error: 'Failed to get a valid response from LLM API' })
     }
 
-    const polishedText = data.choices[0].message.content
+    const polishedText = data.choices[0].message.content.trim()
     res.status(200).json({ polishedText })
   } catch (error) {
     console.error('Error calling LLM API:', error)

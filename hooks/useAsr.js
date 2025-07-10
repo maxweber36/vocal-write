@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { createAsrService } from '../lib/asr-service'
 
 // 录音时长限制：10分钟（毫秒）
-const MAX_RECORDING_DURATION = 10 * 60 * 1000
+export const MAX_RECORDING_DURATION = 10 * 60 * 1000
 
 export function useAsr() {
   const [transcript, setTranscript] = useState('')

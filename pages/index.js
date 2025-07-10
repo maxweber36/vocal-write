@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 
-import { useAsr } from '../hooks/useAsr'
+import { useAsr, MAX_RECORDING_DURATION } from '../hooks/useAsr'
 import Button from '../src/components/ui/Button'
 import AudioVisualizer from '../src/components/feature/AudioVisualizer'
 import Footer from '../src/components/layout/Footer'
@@ -56,7 +56,7 @@ export default function Home() {
 
       const data = await response.json()
       setPolishedTranscript(data.polishedText)
-      
+
       // 自动复制润色后的文本到剪切板
       if (data.polishedText) {
         navigator.clipboard.writeText(data.polishedText).then(
@@ -151,7 +151,9 @@ export default function Home() {
         </div>
 
         <div className="w-full max-w flex flex-col items-center justify-center">
-          <div className="w-full relative">  {/* 添加 relative */}
+          <div className="w-full relative">
+            {' '}
+            {/* 添加 relative */}
             <RecognitionResult
               transcript={transcript}
               interimTranscript={interimTranscript}
@@ -189,18 +191,45 @@ export default function Home() {
 
           <div className="flex flex-col items-center gap-4 mt-10">
             <Button onClick={toggleRecording} isRecording={isRecording} />
-            <AudioVisualizer audioLevel={audioLevel} />
-            
+
             {/* 录音状态和时长显示 */}
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col items-center gap-3">
               <p className="text-sm text-gray-500">
-                {isRecording ? '录音中...' : '点击开始录音'}
+                {isRecording ? '录音中' : '点击开始录音'}
               </p>
               {isRecording && (
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <span>{formatDuration(recordingDuration)}</span>
-                  <span className="text-gray-300">/ 10:00</span>
+                <div className="flex flex-col items-center gap-2 w-80">
+                  {/* 进度条容器 - 时间显示在两侧 */}
+                  <div className="flex items-center gap-3 w-full">
+                    {/* 左侧时间显示 */}
+                    <span className="text-gray-600 font-mono text-xs min-w-[2.5rem]">
+                      {formatDuration(recordingDuration)}
+                    </span>
+
+                    {/* 中间进度条 */}
+                    <div className="flex-1 bg-gray-200 rounded-full h-2 relative overflow-hidden">
+                      {/* 进度条背景 */}
+                      <div
+                        className="h-full bg-gradient-to-r from-sky-400 to-rose-400 rounded-full transition-all duration-300 ease-out"
+                        style={{
+                          width: `${Math.min((recordingDuration / MAX_RECORDING_DURATION) * 100, 100)}%`,
+                        }}
+                      ></div>
+                      {/* 闪烁指示器 */}
+                      <div
+                        className="absolute top-0 w-1 h-full bg-white shadow-lg animate-pulse"
+                        style={{
+                          left: `${Math.min((recordingDuration / MAX_RECORDING_DURATION) * 100, 100)}%`,
+                          transform: 'translateX(-50%)',
+                        }}
+                      ></div>
+                    </div>
+
+                    {/* 右侧时间显示 */}
+                    <span className="text-gray-400 font-mono text-xs min-w-[2.5rem]">
+                      10:00
+                    </span>
+                  </div>
                 </div>
               )}
             </div>
