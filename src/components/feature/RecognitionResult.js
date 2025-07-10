@@ -10,7 +10,7 @@ const RecognitionResult = ({
   const displayText = polishedTranscript || transcript
 
   return (
-    <div className="w-full max-w-3xl p-6 bg-white rounded-2xl shadow-lg min-h-[250px] text-left text-sm leading-relaxed whitespace-pre-wrap border border-gray-200 flex items-center justify-center">
+    <div className="w-full max-w-3xl p-6 bg-white rounded-2xl shadow-lg min-h-[300px] text-left text-sm leading-relaxed whitespace-pre-wrap border border-gray-200 flex items-center justify-center">
       {isPolishing ? (
         <LoadingSpinner />
       ) : (

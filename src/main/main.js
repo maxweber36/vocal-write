@@ -5,7 +5,6 @@ const {
   Menu,
   globalShortcut,
   ipcMain,
-  dialog,
 } = require('electron')
 const path = require('path')
 const isDev = require('electron-is-dev')
@@ -25,14 +24,14 @@ function createWindow() {
 
   mainWindow = new BrowserWindow({
     width: 400,
-    height: 800,
+    height: 600,
     show: true,
     frame: true,
     movable: true,
     alwaysOnTop: true,
     transparent: false,
     backgroundColor: '#ffffff',
-    resizable: false,
+    resizable: true,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,

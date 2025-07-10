@@ -53,9 +53,9 @@ export default function Home() {
    */
   useEffect(() => {
     if (window.ipcRenderer) {
-      window.ipcRenderer.send('recording-state-changed', isRecording);
+      window.ipcRenderer.send('recording-state-changed', isRecording)
     }
-  }, [isRecording]);
+  }, [isRecording])
 
   const toggleRecording = useCallback(() => {
     if (isRecording) {
@@ -70,57 +70,58 @@ export default function Home() {
 
   useEffect(() => {
     const handleToggleRecording = () => {
-      toggleRecording();
-    };
+      toggleRecording()
+    }
 
     if (window.ipcRenderer) {
       const unsubscribe = window.ipcRenderer.on(
         'toggle-recording',
         handleToggleRecording
-      );
-      return unsubscribe; // 在组件卸载时清理监听器
+      )
+      return unsubscribe // 在组件卸载时清理监听器
     }
-  }, [toggleRecording]);
+  }, [toggleRecording])
 
   return (
     <div className="flex flex-col items-center justify-between min-h-screen bg-gray-100 text-gray-700 p-4 sm:p-6 md:p-8">
       {/* 拖拽区域 */}
       <div
-        className="fixed top-0 left-0 w-full h-20 z-50"
+        className="fixed top-0 left-0 w-full h-25 z-50"
         style={{ WebkitAppRegion: 'drag' }}
       ></div>
 
-      <main className="flex flex-col items-center justify-center w-full flex-1 text-center gap-8">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-800">
-            欢迎使用
-            <span className="text-blue-500"> 快记说</span>
+      <main className="flex flex-col w-full flex-1 items-center">
+        <div className="flex flex-col p-4 max-w-3xl w-full ">
+          <h1 className="text-1xl sm:text-3xl font-bold text-blue-500">
+            快记说
           </h1>
-          <p className="text-base sm:text-lg text-gray-500 mt-3">
+          <p className="text-sm sm:text-base text-gray-500 mt-3">
             语音输入，自动润色，轻松记录每一刻
           </p>
         </div>
 
-        <RecognitionResult
-          transcript={transcript}
-          interimTranscript={interimTranscript}
-          isPolishing={isPolishing}
-          polishedTranscript={polishedTranscript}
-        />
+        <div className="w-full max-w flex flex-col items-center justify-center">
+          <RecognitionResult
+            transcript={transcript}
+            interimTranscript={interimTranscript}
+            isPolishing={isPolishing}
+            polishedTranscript={polishedTranscript}
+          />
 
-        <div className="flex flex-col items-center gap-4">
-          <Button onClick={toggleRecording} isRecording={isRecording} />
-          <AudioVisualizer audioLevel={audioLevel} />
-          <p className="mt-1 text-sm text-gray-500">
-            {isRecording ? '录音中...' : '点击开始录音'}
-          </p>
-        </div>
-
-        {error && (
-          <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-lg">
-            <strong>错误:</strong> {error}
+          <div className="flex flex-col items-center gap-4 mt-10">
+            <Button onClick={toggleRecording} isRecording={isRecording} />
+            <AudioVisualizer audioLevel={audioLevel} />
+            <p className="mt-1 text-sm text-gray-500">
+              {isRecording ? '录音中...' : '点击开始录音'}
+            </p>
           </div>
-        )}
+
+          {error && (
+            <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-lg">
+              <strong>错误:</strong> {error}
+            </div>
+          )}
+        </div>
       </main>
 
       <Footer />
