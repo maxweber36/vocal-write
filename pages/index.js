@@ -13,12 +13,25 @@ export default function Home() {
     isRecording,
     audioLevel,
     error,
+    recordingDuration,
     toggleRecording: asrToggleRecording,
   } = useAsr()
 
   const [isPolishing, setIsPolishing] = useState(false)
   const [polishedTranscript, setPolishedTranscript] = useState('')
   const [showCopySuccess, setShowCopySuccess] = useState(false)
+
+  /**
+   * 格式化录音时长为 mm:ss 格式
+   * @param {number} duration - 录音时长（毫秒）
+   * @returns {string} 格式化后的时间字符串
+   */
+  const formatDuration = useCallback((duration) => {
+    const totalSeconds = Math.floor(duration / 1000)
+    const minutes = Math.floor(totalSeconds / 60)
+    const seconds = totalSeconds % 60
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+  }, [])
 
   /**
    * Handles the polishing of the given text.
@@ -177,9 +190,20 @@ export default function Home() {
           <div className="flex flex-col items-center gap-4 mt-10">
             <Button onClick={toggleRecording} isRecording={isRecording} />
             <AudioVisualizer audioLevel={audioLevel} />
-            <p className="mt-1 text-sm text-gray-500">
-              {isRecording ? '录音中...' : '点击开始录音'}
-            </p>
+            
+            {/* 录音状态和时长显示 */}
+            <div className="flex flex-col items-center gap-1">
+              <p className="text-sm text-gray-500">
+                {isRecording ? '录音中...' : '点击开始录音'}
+              </p>
+              {isRecording && (
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                  <span>{formatDuration(recordingDuration)}</span>
+                  <span className="text-gray-300">/ 10:00</span>
+                </div>
+              )}
+            </div>
           </div>
 
           {error && (
