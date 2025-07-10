@@ -96,7 +96,7 @@ export default function Home() {
             快记说
           </h1>
           <p className="text-sm sm:text-base text-gray-500 mt-3">
-            语音输入，自动润色，轻松记录每一刻
+            语音一说即录，文字一键即贴
           </p>
         </div>
 
