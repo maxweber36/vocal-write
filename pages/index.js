@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+
 import { useAsr } from '../hooks/useAsr'
 import Button from '../src/components/ui/Button'
 import AudioVisualizer from '../src/components/feature/AudioVisualizer'
@@ -17,6 +18,7 @@ export default function Home() {
 
   const [isPolishing, setIsPolishing] = useState(false)
   const [polishedTranscript, setPolishedTranscript] = useState('')
+  const [showCopySuccess, setShowCopySuccess] = useState(false)
 
   /**
    * Handles the polishing of the given text.
@@ -41,12 +43,47 @@ export default function Home() {
 
       const data = await response.json()
       setPolishedTranscript(data.polishedText)
+      
+      // 自动复制润色后的文本到剪切板
+      if (data.polishedText) {
+        navigator.clipboard.writeText(data.polishedText).then(
+          () => {
+            setShowCopySuccess(true)
+          },
+          (err) => {
+            console.error('Could not copy text: ', err)
+          }
+        )
+      }
     } catch (error) {
       alert(error.message)
     } finally {
       setIsPolishing(false)
     }
   }, [])
+
+  const handleCopy = useCallback(() => {
+    const textToCopy = polishedTranscript || (transcript && transcript.final)
+    if (textToCopy) {
+      navigator.clipboard.writeText(textToCopy).then(
+        () => {
+          setShowCopySuccess(true)
+        },
+        (err) => {
+          console.error('Could not copy text: ', err)
+        }
+      )
+    }
+  }, [transcript.final, polishedTranscript])
+
+  useEffect(() => {
+    if (showCopySuccess) {
+      const timer = setTimeout(() => {
+        setShowCopySuccess(false)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [showCopySuccess])
 
   /**
    * Toggles the recording state and handles text polishing.
@@ -101,12 +138,41 @@ export default function Home() {
         </div>
 
         <div className="w-full max-w flex flex-col items-center justify-center">
-          <RecognitionResult
-            transcript={transcript}
-            interimTranscript={interimTranscript}
-            isPolishing={isPolishing}
-            polishedTranscript={polishedTranscript}
-          />
+          <div className="w-full relative">  {/* 添加 relative */}
+            <RecognitionResult
+              transcript={transcript}
+              interimTranscript={interimTranscript}
+              isPolishing={isPolishing}
+              polishedTranscript={polishedTranscript}
+            />
+            {!isRecording && !isPolishing && polishedTranscript && (
+              <button
+                onClick={handleCopy}
+                className="absolute bottom-2 right-2 p-2 rounded-md hover:bg-gray-100 focus:outline-none"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+
+          {showCopySuccess && (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-green-500 bg-opacity-70 text-white px-4 py-2 rounded-md">
+              复制成功
+            </div>
+          )}
 
           <div className="flex flex-col items-center gap-4 mt-10">
             <Button onClick={toggleRecording} isRecording={isRecording} />
