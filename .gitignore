@@ -38,3 +38,7 @@ yarn-error.log*
 
 # prd
 /prd
+
+#trae
+/.trae
+
