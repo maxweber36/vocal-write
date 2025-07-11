@@ -63,7 +63,6 @@ function createTray() {
   const iconPath = isDev
     ? path.join(__dirname, `../assets/${iconName}`)
     : path.join(process.resourcesPath, `assets/${iconName}`)
-  console.log(`[Tray] Icon path: ${iconPath}`) // 记录图标路径
 
   try {
     const image = nativeImage.createFromPath(iconPath)
