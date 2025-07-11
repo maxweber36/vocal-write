@@ -1,7 +1,7 @@
-const { contextBridge, ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron')
 
 // 定义安全的、允许通信的事件通道列表
-const VALID_CHANNELS = ['toggle-recording', 'recording-state-changed'];
+const VALID_CHANNELS = ['toggle-recording', 'recording-state-changed']
 
 // 通过 contextBridge 暴露一个安全的、精简版的 ipcRenderer 给渲染进程
 contextBridge.exposeInMainWorld('ipcRenderer', {
@@ -12,7 +12,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
    */
   send: (channel, data) => {
     if (VALID_CHANNELS.includes(channel)) {
-      ipcRenderer.send(channel, data);
+      ipcRenderer.send(channel, data)
     }
   },
 
@@ -24,13 +24,13 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   on: (channel, listener) => {
     if (VALID_CHANNELS.includes(channel)) {
       // 创建一个新的函数来包装原始监听器，以避免暴露 Electron 的 `event` 对象
-      const subscription = (event, ...args) => listener(...args);
-      ipcRenderer.on(channel, subscription);
+      const subscription = (event, ...args) => listener(...args)
+      ipcRenderer.on(channel, subscription)
 
       // 返回一个取消订阅的函数，方便在组件卸载时清理
       return () => {
-        ipcRenderer.removeListener(channel, subscription);
-      };
+        ipcRenderer.removeListener(channel, subscription)
+      }
     }
   },
 
@@ -41,7 +41,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
    */
   removeListener: (channel, listener) => {
     if (VALID_CHANNELS.includes(channel)) {
-      ipcRenderer.removeListener(channel, listener);
+      ipcRenderer.removeListener(channel, listener)
     }
   },
-});
+})

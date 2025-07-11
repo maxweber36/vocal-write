@@ -3,7 +3,7 @@ const nextConfig = {
   trailingSlash: true,
   skipTrailingSlashRedirect: true,
   images: {
-    unoptimized: true
+    unoptimized: true,
   },
   assetPrefix: process.env.NODE_ENV === 'production' ? './' : '',
   webpack: (config) => {
@@ -12,9 +12,9 @@ const nextConfig = {
       fs: false,
       path: false,
       os: false,
-    };
-    return config;
+    }
+    return config
   },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig

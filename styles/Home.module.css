@@ -1,7 +1,11 @@
 .container {
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(135deg, rgba(74, 144, 226, 0.9), rgba(46, 92, 138, 0.9));
+  background: linear-gradient(
+    135deg,
+    rgba(74, 144, 226, 0.9),
+    rgba(46, 92, 138, 0.9)
+  );
   backdrop-filter: blur(10px);
   border-radius: 12px;
   overflow: hidden;
@@ -121,7 +125,7 @@
 
 .startBtn {
   background: rgba(255, 255, 255, 0.9);
-  color: #4A90E2;
+  color: #4a90e2;
   padding: 12px 24px;
   border-radius: 24px;
   font-size: 14px;
@@ -140,7 +144,8 @@
   gap: 12px;
 }
 
-.pauseBtn, .resumeBtn {
+.pauseBtn,
+.resumeBtn {
   background: rgba(255, 193, 7, 0.9);
   color: white;
   padding: 10px 20px;
@@ -150,7 +155,8 @@
   transition: all 0.2s ease;
 }
 
-.pauseBtn:hover, .resumeBtn:hover {
+.pauseBtn:hover,
+.resumeBtn:hover {
   background: rgba(255, 193, 7, 1);
   transform: translateY(-1px);
 }
@@ -186,16 +192,16 @@
   .main {
     padding: 16px;
   }
-  
+
   .title {
     font-size: 16px;
   }
-  
+
   .controls {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .recordingControls {
     justify-content: center;
   }

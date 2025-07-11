@@ -23,7 +23,9 @@ const RecognitionResult = ({
             </div>
           ) : (
             <div>
-              {displayText && <span className="text-gray-500">{displayText}</span>}
+              {displayText && (
+                <span className="text-gray-500">{displayText}</span>
+              )}
               <span className="text-gray-400">{interimTranscript}</span>
             </div>
           )}

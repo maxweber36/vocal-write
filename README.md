@@ -1,12 +1,11 @@
 # Vocal Write - 语音实时转写桌面应用
 
-Vocal Write 是一款基于 Next.js 与 Electron 的跨平台桌面应用，集成实时语音识别服务，支持本地化、低延迟的语音转文字体验，并内置 AI 文本润色功能，适用于会议记录、写作辅助等多场景。
+Vocal Write 是一款基于 Next.js 与 Electron 的跨平台桌面应用，集成实时语音识别服务，支持本地化、低延迟的语音转文字体验，并内置 AI 文本润色功能。
 
 ## 核心特性
 
-- **实时语音识别**：WebSocket 直连腾讯云 ASR，语音秒级转写。
-- **AI 文本润色**：一键调用大模型自动优化识别文本，纠错、精简、提升表达。
-- **现代化 UI**：采用 Tailwind CSS，界面简洁美观，支持响应式布局。
+- **实时语音识别**：WebSocket 直连外部的实时语音识别的ASR接口。
+- **AI 文本润色**：调用大模型自动优化识别文本，纠错、精简、提升表达。
 - **组件化开发**：前端功能与 UI 拆分为独立 React 组件，便于维护和扩展。
 - **隐私安全**：API 密钥仅存储于本地后端，前端通过签名授权调用，保障数据安全。
 - **跨平台支持**：Electron 打包，兼容 macOS、Windows、Linux。
@@ -16,7 +15,7 @@ Vocal Write 是一款基于 Next.js 与 Electron 的跨平台桌面应用，集�
 - **主框架**：Next.js ^14.2.3、Electron ^31.0.0
 - **前端**：React ^18.2.0、Tailwind CSS ^3.4.3
 - **语音服务**：腾讯云实时语音识别（ASR）
-- **AI 服务**：GLM-4-32B 大模型 API（文本润色）
+- **AI 服务**：硅基流动提供的大模型（LLM）
 - **音频处理**：Web Audio API (AudioWorklet)
 - **代码规范**：ESLint、Prettier
 
@@ -51,8 +50,9 @@ Vocal Write 是一款基于 Next.js 与 Electron 的跨平台桌面应用，集�
 
 ### 3. 交互体验
 
-- 支持录音控制、识别动画、音量可视化。
-- 支持一键复制、文本编辑、原文/润色切换。
+- 支持录音控制、识别动画。
+- 支持一键复制。
+- 支持实时语音识别状态提示。
 
 ## 快速开始
 
@@ -68,7 +68,7 @@ Vocal Write 是一款基于 Next.js 与 Electron 的跨平台桌面应用，集�
    yarn install
    ```
 3. **配置环境变量**
-   在根目录创建 `.env.local`，填写腾讯云 API 信息：
+   在根目录创建 `.env.local`，填写腾讯云和硅基流动的 API 信息：
    ```
    TENCENT_APP_ID=xxx
    TENCENT_SECRET_ID=xxx

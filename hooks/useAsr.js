@@ -23,11 +23,11 @@ export function useAsr() {
   const startRecordingTimer = useCallback(() => {
     recordingStartTimeRef.current = Date.now()
     setRecordingDuration(0)
-    
+
     recordingTimerRef.current = setInterval(() => {
       const elapsed = Date.now() - recordingStartTimeRef.current
       setRecordingDuration(elapsed)
-      
+
       // 检查是否超过最大录音时长
       if (elapsed >= MAX_RECORDING_DURATION) {
         console.log('录音时长已达到10分钟上限，自动停止录音')
