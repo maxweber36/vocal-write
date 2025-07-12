@@ -11,7 +11,7 @@ const RecognitionResult = ({
   const showEditableTextarea = !isPolishing && polishedTranscript !== ''
 
   return (
-    <div className="w-full max-w-3xl p-6 bg-white rounded-2xl shadow-lg h-[300px] text-left text-sm leading-relaxed border border-gray-200 overflow-y-auto">
+    <div className="w-full max-w-3xl p-6 bg-white rounded-2xl shadow-lg h-[300px] text-left text-sm leading-relaxed border border-gray-200 overflow-y-auto pb-12">
       {isPolishing ? (
         <div className="h-full flex items-center justify-center">
           <LoadingSpinner />

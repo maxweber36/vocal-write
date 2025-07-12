@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import Image from 'next/image'
 import copyIcon from '../src/assets/icon-copy.png'
+import polishIcon from '../src/assets/icon-polish-text.png'
 
 import { useAsr, MAX_RECORDING_DURATION } from '../hooks/useAsr'
 import Button from '../src/components/ui/Button'
@@ -165,6 +166,15 @@ export default function Home() {
                   className="absolute bottom-2 right-2 p-2 rounded-md hover:bg-gray-100 focus:outline-none"
                 >
                   <Image src={copyIcon} alt="Copy icon" width={20} height={20} />
+                </button>
+              )}
+              {!isRecording && polishedTranscript && (
+                <button
+                  onClick={() => handlePolishText(polishedTranscript)}
+                  className="absolute bottom-2 right-10 p-2 rounded-md hover:bg-gray-100 focus:outline-none"
+                  disabled={isPolishing}
+                >
+                  <Image src={polishIcon} alt="Polish icon" width={20} height={20} />
                 </button>
               )}
             </div>
