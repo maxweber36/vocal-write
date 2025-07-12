@@ -6,26 +6,31 @@ const RecognitionResult = ({
   interimTranscript,
   isPolishing,
   polishedTranscript,
+  onPolishedTranscriptChange,
 }) => {
-  const displayText = polishedTranscript || transcript
+  const showEditableTextarea = !isPolishing && polishedTranscript !== ''
 
   return (
-    <div className="w-full max-w-3xl p-6 bg-white rounded-2xl shadow-lg h-[300px] text-left text-sm leading-relaxed whitespace-pre-wrap border border-gray-200 overflow-y-auto">
+    <div className="w-full max-w-3xl p-6 bg-white rounded-2xl shadow-lg h-[300px] text-left text-sm leading-relaxed border border-gray-200 overflow-y-auto">
       {isPolishing ? (
         <div className="h-full flex items-center justify-center">
           <LoadingSpinner />
         </div>
+      ) : showEditableTextarea ? (
+        <textarea
+          className="w-full h-full bg-transparent focus:outline-none resize-none"
+          value={polishedTranscript}
+          onChange={onPolishedTranscriptChange}
+        />
       ) : (
         <div className="w-full">
-          {!displayText && !interimTranscript ? (
+          {transcript.final === '' && interimTranscript === '' ? (
             <div className="h-full flex items-center justify-center">
               <span className="text-gray-400">识别结果将显示在这里...</span>
             </div>
           ) : (
             <div>
-              {displayText && (
-                <span className="text-gray-500">{displayText}</span>
-              )}
+              <span className="text-gray-500">{transcript.final}</span>
               <span className="text-gray-400">{interimTranscript}</span>
             </div>
           )}

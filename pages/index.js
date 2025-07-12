@@ -5,6 +5,7 @@ import Button from '../src/components/ui/Button'
 import AudioVisualizer from '../src/components/feature/AudioVisualizer'
 import Footer from '../src/components/layout/Footer'
 import RecognitionResult from '../src/components/feature/RecognitionResult'
+import LoadingSpinner from '../src/components/ui/LoadingSpinner'
 
 export default function Home() {
   const {
@@ -56,27 +57,17 @@ export default function Home() {
 
       const data = await response.json()
       setPolishedTranscript(data.polishedText)
-
-      // 自动复制润色后的文本到剪切板
-      if (data.polishedText) {
-        navigator.clipboard.writeText(data.polishedText).then(
-          () => {
-            setShowCopySuccess(true)
-          },
-          (err) => {
-            console.error('Could not copy text: ', err)
-          }
-        )
-      }
     } catch (error) {
       alert(error.message)
+      // 润色失败时，将被原始文本设置为可编辑
+      setPolishedTranscript(text)
     } finally {
       setIsPolishing(false)
     }
   }, [])
 
   const handleCopy = useCallback(() => {
-    const textToCopy = polishedTranscript || (transcript && transcript.final)
+    const textToCopy = polishedTranscript
     if (textToCopy) {
       navigator.clipboard.writeText(textToCopy).then(
         () => {
@@ -87,7 +78,7 @@ export default function Home() {
         }
       )
     }
-  }, [transcript.final, polishedTranscript])
+  }, [polishedTranscript])
 
   useEffect(() => {
     if (showCopySuccess) {
@@ -117,6 +108,10 @@ export default function Home() {
       asrToggleRecording()
     }
   }, [isRecording, asrToggleRecording, handlePolishText])
+
+  const handlePolishedTranscriptChange = useCallback((e) => {
+    setPolishedTranscript(e.target.value)
+  }, [])
 
   useEffect(() => {
     const handleToggleRecording = () => {
@@ -159,6 +154,7 @@ export default function Home() {
               interimTranscript={interimTranscript}
               isPolishing={isPolishing}
               polishedTranscript={polishedTranscript}
+              onPolishedTranscriptChange={handlePolishedTranscriptChange}
             />
             {!isRecording && !isPolishing && polishedTranscript && (
               <button
@@ -236,7 +232,7 @@ export default function Home() {
           </div>
 
           {error && (
-            <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-lg">
+            <div className="mt-4 p-3 bg-red-100 text-red-500 rounded-lg">
               <strong>错误:</strong> {error}
             </div>
           )}
