@@ -2,8 +2,9 @@
  * @file polish-text.js
  * @description This file contains the API route for polishing text.
  */
+import { withApiKey } from '../../lib/auth';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' })
   }
@@ -74,3 +75,5 @@ export default async function handler(req, res) {
     res.status(500).json({ error: 'An unexpected error occurred' })
   }
 }
+
+export default withApiKey(handler);

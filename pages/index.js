@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback } from 'react'
+import { polishText } from '../lib/api'
 import Image from 'next/image'
 import copyIcon from '../src/assets/icon-copy.png'
 import polishIcon from '../src/assets/icon-polish-text.png'
 
 import { useAsr, MAX_RECORDING_DURATION } from '../hooks/useAsr'
 import Button from '../src/components/ui/Button'
-import AudioVisualizer from '../src/components/feature/AudioVisualizer'
 import Footer from '../src/components/layout/Footer'
 import RecognitionResult from '../src/components/feature/RecognitionResult'
 import LoadingSpinner from '../src/components/ui/LoadingSpinner'
@@ -46,20 +46,8 @@ export default function Home() {
 
     setIsPolishing(true)
     try {
-      const response = await fetch('/api/polish-text', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to polish text.')
-      }
-
-      const data = await response.json()
-      setPolishedTranscript(data.polishedText)
+      const polished = await polishText(text)
+      setPolishedTranscript(polished)
     } catch (error) {
       alert(error.message)
       // 润色失败时，将被原始文本设置为可编辑
@@ -165,7 +153,12 @@ export default function Home() {
                   onClick={handleCopy}
                   className="absolute bottom-2 right-2 p-2 rounded-md hover:bg-gray-100 focus:outline-none"
                 >
-                  <Image src={copyIcon} alt="Copy icon" width={20} height={20} />
+                  <Image
+                    src={copyIcon}
+                    alt="Copy icon"
+                    width={20}
+                    height={20}
+                  />
                 </button>
               )}
               {!isRecording && polishedTranscript && (
@@ -174,7 +167,12 @@ export default function Home() {
                   className="absolute bottom-2 right-10 p-2 rounded-md hover:bg-gray-100 focus:outline-none"
                   disabled={isPolishing}
                 >
-                  <Image src={polishIcon} alt="Polish icon" width={20} height={20} />
+                  <Image
+                    src={polishIcon}
+                    alt="Polish icon"
+                    width={20}
+                    height={20}
+                  />
                 </button>
               )}
             </div>

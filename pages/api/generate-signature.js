@@ -1,6 +1,7 @@
 import crypto from 'crypto'
+import { withApiKey } from '../../lib/auth'
 
-export default function handler(req, res) {
+function handler(req, res) {
   try {
     //请求方法检查
     if (req.method !== 'GET') {
@@ -65,3 +66,5 @@ export default function handler(req, res) {
     res.status(500).json({ error: '签名生成失败' })
   }
 }
+
+export default withApiKey(handler)
