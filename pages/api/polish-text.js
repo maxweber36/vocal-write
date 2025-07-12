@@ -2,7 +2,7 @@
  * @file polish-text.js
  * @description This file contains the API route for polishing text.
  */
-import { withApiKey } from '../../lib/auth';
+import { withApiKey } from '../../lib/auth'
 
 async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -76,4 +76,4 @@ async function handler(req, res) {
   }
 }
 
-export default withApiKey(handler);
+export default withApiKey(handler)
