@@ -2,6 +2,7 @@
 const nextConfig = {
   trailingSlash: true,
   skipTrailingSlashRedirect: true,
+  output: 'export',
   images: {
     unoptimized: true,
   },
