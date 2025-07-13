@@ -4,8 +4,8 @@
   "main": "src/main/main.js",
   "homepage": "./",
   "scripts": {
-    "dev": "concurrently \"npm run next-dev\" \"wait-on http://localhost:8890 && npm run electron-dev\"",
-    "next-dev": "next dev -p 8890",
+    "dev": "concurrently \"npm run next-dev\" \"wait-on http://localhost:3000 && npm run electron-dev\"",
+    "next-dev": "next dev -p 3000",
     "electron-dev": "electron .",
     "build": "next build",
     "electron-pack": "electron-builder",

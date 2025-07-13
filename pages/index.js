@@ -1,16 +1,16 @@
 import { useEffect, useState, useCallback } from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import copyIcon from '../src/assets/icon-copy.png'
 import polishIcon from '../src/assets/icon-polish-text.png'
 
 import { useAsr, MAX_RECORDING_DURATION } from '../hooks/useAsr'
 import Button from '../src/components/ui/Button'
-import AudioVisualizer from '../src/components/feature/AudioVisualizer'
 import Footer from '../src/components/layout/Footer'
 import RecognitionResult from '../src/components/feature/RecognitionResult'
-import LoadingSpinner from '../src/components/ui/LoadingSpinner'
 
 export default function Home() {
+  const router = useRouter()
   const {
     transcript,
     interimTranscript,
@@ -116,6 +116,13 @@ export default function Home() {
     setPolishedTranscript(e.target.value)
   }, [])
 
+  /**
+   * 跳转到配置页面
+   */
+  const handleGoToConfig = useCallback(() => {
+    router.push('/config')
+  }, [router])
+
   useEffect(() => {
     const handleToggleRecording = () => {
       toggleRecording()
@@ -140,12 +147,43 @@ export default function Home() {
 
       <main className="flex flex-col w-full flex-1 items-center">
         <div className="flex flex-col p-4 max-w-3xl w-full ">
-          <h1 className="text-1xl sm:text-3xl font-bold text-blue-500">
-            快记说
-          </h1>
-          <p className="text-sm sm:text-base text-gray-500 mt-3">
-            语音一说即录，文字一键即贴
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-1xl sm:text-3xl font-bold text-blue-500">
+                快记说
+              </h1>
+              <p className="text-sm sm:text-base text-gray-500 mt-3">
+                语音一说即录，文字一键即贴
+              </p>
+            </div>
+            <button
+              onClick={handleGoToConfig}
+              className="p-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              style={{ WebkitAppRegion: 'no-drag' }}
+              title="API配置"
+            >
+              <svg
+                className="w-5 h-5 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                ></path>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                ></path>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div className="w-full max-w flex flex-col items-center justify-center">
@@ -165,7 +203,12 @@ export default function Home() {
                   onClick={handleCopy}
                   className="absolute bottom-2 right-2 p-2 rounded-md hover:bg-gray-100 focus:outline-none"
                 >
-                  <Image src={copyIcon} alt="Copy icon" width={20} height={20} />
+                  <Image
+                    src={copyIcon}
+                    alt="Copy icon"
+                    width={20}
+                    height={20}
+                  />
                 </button>
               )}
               {!isRecording && polishedTranscript && (
@@ -174,7 +217,12 @@ export default function Home() {
                   className="absolute bottom-2 right-10 p-2 rounded-md hover:bg-gray-100 focus:outline-none"
                   disabled={isPolishing}
                 >
-                  <Image src={polishIcon} alt="Polish icon" width={20} height={20} />
+                  <Image
+                    src={polishIcon}
+                    alt="Polish icon"
+                    width={20}
+                    height={20}
+                  />
                 </button>
               )}
             </div>
