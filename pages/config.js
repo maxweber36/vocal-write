@@ -12,7 +12,7 @@ export default function Config() {
     TENCENT_APP_ID: '',
     TENCENT_SECRET_ID: '',
     TENCENT_SECRET_KEY: '',
-    LLM_API_KEY: ''
+    LLM_API_KEY: '',
   })
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -48,9 +48,9 @@ export default function Config() {
    * 处理输入框变化
    */
   const handleInputChange = (key, value) => {
-    setConfig(prev => ({
+    setConfig((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }))
   }
 
@@ -63,9 +63,9 @@ export default function Config() {
       const response = await fetch('/api/config', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(config)
+        body: JSON.stringify(config),
       })
 
       if (response.ok) {
@@ -132,11 +132,13 @@ export default function Config() {
 
         {/* 消息提示 */}
         {message && (
-          <div className={`mb-4 p-3 rounded-md ${
-            messageType === 'success' 
-              ? 'bg-green-100 text-green-700 border border-green-300'
-              : 'bg-red-100 text-red-700 border border-red-300'
-          }`}>
+          <div
+            className={`mb-4 p-3 rounded-md ${
+              messageType === 'success'
+                ? 'bg-green-100 text-green-700 border border-green-300'
+                : 'bg-red-100 text-red-700 border border-red-300'
+            }`}
+          >
             {message}
           </div>
         )}
@@ -145,7 +147,9 @@ export default function Config() {
         <div className="space-y-6">
           {/* 腾讯云配置 */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">腾讯云语音识别配置</h2>
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">
+              腾讯云语音识别配置
+            </h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -154,13 +158,15 @@ export default function Config() {
                 <input
                   type="text"
                   value={config.TENCENT_APP_ID}
-                  onChange={(e) => handleInputChange('TENCENT_APP_ID', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('TENCENT_APP_ID', e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="请输入腾讯云应用ID"
                   style={{ WebkitAppRegion: 'no-drag' }}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   密钥 ID (TENCENT_SECRET_ID)
@@ -168,13 +174,15 @@ export default function Config() {
                 <input
                   type="text"
                   value={config.TENCENT_SECRET_ID}
-                  onChange={(e) => handleInputChange('TENCENT_SECRET_ID', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('TENCENT_SECRET_ID', e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="请输入腾讯云密钥ID"
                   style={{ WebkitAppRegion: 'no-drag' }}
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   密钥 (TENCENT_SECRET_KEY)
@@ -182,7 +190,9 @@ export default function Config() {
                 <input
                   type="password"
                   value={config.TENCENT_SECRET_KEY}
-                  onChange={(e) => handleInputChange('TENCENT_SECRET_KEY', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange('TENCENT_SECRET_KEY', e.target.value)
+                  }
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="请输入腾讯云密钥"
                   style={{ WebkitAppRegion: 'no-drag' }}
@@ -193,7 +203,9 @@ export default function Config() {
 
           {/* LLM配置 */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-700 mb-4">大模型配置</h2>
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">
+              大模型配置
+            </h2>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 API 密钥 (LLM_API_KEY)
@@ -201,7 +213,9 @@ export default function Config() {
               <input
                 type="password"
                 value={config.LLM_API_KEY}
-                onChange={(e) => handleInputChange('LLM_API_KEY', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange('LLM_API_KEY', e.target.value)
+                }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="请输入大模型API密钥"
                 style={{ WebkitAppRegion: 'no-drag' }}
@@ -234,7 +248,18 @@ export default function Config() {
           <h3 className="text-sm font-medium text-gray-700 mb-2">配置说明：</h3>
           <ul className="text-sm text-gray-600 space-y-1">
             <li>• 腾讯云配置用于语音识别服务</li>
-            <li>• LLM API密钥用于文本润色功能</li>
+            <li>
+              • LLM API密钥(
+              <a
+                href="https://cloud.siliconflow.cn/i/FIKFUSng"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="underline hover:text-blue-500"
+              >
+                获取硅基流动API
+              </a>
+              )用于文本润色功能
+            </li>
             <li>• 所有配置信息仅存储在本地，确保数据安全</li>
             <li>• 修改配置后需要重启应用才能生效</li>
           </ul>

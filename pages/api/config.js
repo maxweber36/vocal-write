@@ -39,10 +39,20 @@ function handleGetConfig(req, res) {
  */
 function handleSaveConfig(req, res) {
   try {
-    const { TENCENT_APP_ID, TENCENT_SECRET_ID, TENCENT_SECRET_KEY, LLM_API_KEY } = req.body
+    const {
+      TENCENT_APP_ID,
+      TENCENT_SECRET_ID,
+      TENCENT_SECRET_KEY,
+      LLM_API_KEY,
+    } = req.body
 
     // 验证必填字段
-    if (!TENCENT_APP_ID || !TENCENT_SECRET_ID || !TENCENT_SECRET_KEY || !LLM_API_KEY) {
+    if (
+      !TENCENT_APP_ID ||
+      !TENCENT_SECRET_ID ||
+      !TENCENT_SECRET_KEY ||
+      !LLM_API_KEY
+    ) {
       return res.status(400).json({ message: '所有配置项都是必填的' })
     }
 
@@ -51,7 +61,7 @@ function handleSaveConfig(req, res) {
       TENCENT_APP_ID,
       TENCENT_SECRET_ID,
       TENCENT_SECRET_KEY,
-      LLM_API_KEY
+      LLM_API_KEY,
     }
 
     saveConfig(config)
@@ -74,18 +84,18 @@ function readConfig() {
         TENCENT_APP_ID: '',
         TENCENT_SECRET_ID: '',
         TENCENT_SECRET_KEY: '',
-        LLM_API_KEY: ''
+        LLM_API_KEY: '',
       }
     }
 
     const content = fs.readFileSync(CONFIG_FILE_PATH, 'utf8')
     const config = parseEnvContent(content)
-    
+
     return {
       TENCENT_APP_ID: config.TENCENT_APP_ID || '',
       TENCENT_SECRET_ID: config.TENCENT_SECRET_ID || '',
       TENCENT_SECRET_KEY: config.TENCENT_SECRET_KEY || '',
-      LLM_API_KEY: config.LLM_API_KEY || ''
+      LLM_API_KEY: config.LLM_API_KEY || '',
     }
   } catch (error) {
     console.error('读取配置文件失败:', error)
@@ -109,12 +119,12 @@ function saveConfig(config) {
     // 合并配置
     const mergedConfig = {
       ...existingConfig,
-      ...config
+      ...config,
     }
 
     // 生成新的配置文件内容
     const envContent = generateEnvContent(mergedConfig)
-    
+
     // 写入文件
     fs.writeFileSync(CONFIG_FILE_PATH, envContent, 'utf8')
   } catch (error) {
@@ -131,7 +141,7 @@ function saveConfig(config) {
 function parseEnvContent(content) {
   const config = {}
   const lines = content.split('\n')
-  
+
   for (const line of lines) {
     const trimmedLine = line.trim()
     if (trimmedLine && !trimmedLine.startsWith('#')) {
@@ -139,18 +149,20 @@ function parseEnvContent(content) {
       if (equalIndex > 0) {
         const key = trimmedLine.substring(0, equalIndex).trim()
         let value = trimmedLine.substring(equalIndex + 1).trim()
-        
+
         // 移除引号
-        if ((value.startsWith('"') && value.endsWith('"')) || 
-            (value.startsWith("'") && value.endsWith("'"))) {
+        if (
+          (value.startsWith('"') && value.endsWith('"')) ||
+          (value.startsWith("'") && value.endsWith("'"))
+        ) {
           value = value.slice(1, -1)
         }
-        
+
         config[key] = value
       }
     }
   }
-  
+
   return config
 }
 
@@ -161,32 +173,35 @@ function parseEnvContent(content) {
  */
 function generateEnvContent(config) {
   const lines = []
-  
+
   // 按照特定顺序排列配置项
   const orderedKeys = [
     'TENCENT_APP_ID',
-    'TENCENT_SECRET_ID', 
+    'TENCENT_SECRET_ID',
     'TENCENT_SECRET_KEY',
-    'LLM_API_KEY'
+    'LLM_API_KEY',
   ]
-  
+
   // 添加有序的配置项
   for (const key of orderedKeys) {
     if (config[key] !== undefined) {
       lines.push(`${key}=${config[key]}`)
     }
   }
-  
+
   // 添加其他配置项
   for (const [key, value] of Object.entries(config)) {
     if (!orderedKeys.includes(key)) {
-      if (typeof value === 'string' && (value.includes(' ') || value.includes('/'))) {
+      if (
+        typeof value === 'string' &&
+        (value.includes(' ') || value.includes('/'))
+      ) {
         lines.push(`${key}="${value}"`)
       } else {
         lines.push(`${key}=${value}`)
       }
     }
   }
-  
+
   return lines.join('\n') + '\n'
 }

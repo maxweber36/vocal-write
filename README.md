@@ -83,21 +83,24 @@
    yarn install
    ```
 3. **配置API信息**
-   
+
    **方式一：通过配置页面（推荐）**
    - 启动应用后，点击主页面右上角的设置按钮
    - 在配置页面填写腾讯云和大模型的API信息
    - 点击保存配置即可
-   
+
    **方式二：手动创建配置文件**
    在根目录创建 `.env.local`，填写API信息：
+
    ```
    TENCENT_APP_ID=xxx
    TENCENT_SECRET_ID=xxx
    TENCENT_SECRET_KEY=xxx
    LLM_API_KEY=xxx
    ```
+
    > `.env.local` 已加入 `.gitignore`，请勿上传密钥。
+
 4. **启动开发环境**
    ```bash
    npm run dev
