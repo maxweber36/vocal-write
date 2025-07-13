@@ -8,6 +8,8 @@ const {
 } = require('electron')
 const path = require('path')
 const isDev = require('electron-is-dev')
+const fs = require('fs')
+const dotenv = require('dotenv')
 
 let mainWindow = null
 let tray = null
@@ -39,11 +41,11 @@ function createWindow() {
     },
   })
 
-  const startUrl = isDev
-    ? 'http://localhost:3000'
-    : `file://${path.join(__dirname, '../../out/index.html')}`
-
-  mainWindow.loadURL(startUrl)
+  if (isDev) {
+    mainWindow.loadURL('http://localhost:3000')
+  } else {
+    // In production, the URL is loaded in the whenReady event, after the Next.js server has started.
+  }
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -170,21 +172,98 @@ function registerGlobalShortcuts() {
 }
 
 // 应用事件处理
-ipcMain.on('recording-state-changed', (event, newIsRecording) => {
-  isRecording = newIsRecording
-  updateTrayMenu()
-})
+// 在生产环境中加载环境变量
+if (!isDev) {
+  const envPath = path.join(process.resourcesPath, '.env.production')
+  if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath })
+  } else {
+    console.error('.env.production not found in resources path')
+  }
+}
 
 app.whenReady().then(() => {
-  createWindow()
-  createTray()
-  registerGlobalShortcuts()
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+  // IPC for config management
+  ipcMain.handle('get-config', (event) => {
+    if (!isDev) {
+      const envPath = path.join(process.resourcesPath, '.env.production')
+      if (fs.existsSync(envPath)) {
+        const envConfig = dotenv.parse(fs.readFileSync(envPath))
+        return envConfig
+      } else {
+        return {}
+      }
+    } else {
+      const envPath = path.join(__dirname, '../../.env.local')
+      if (fs.existsSync(envPath)) {
+        const envConfig = dotenv.parse(fs.readFileSync(envPath))
+        return envConfig
+      } else {
+        return {}
+      }
     }
   })
+
+  ipcMain.handle('save-config', (event, config) => {
+    const envPath = isDev
+      ? path.join(__dirname, '../../.env.local')
+      : path.join(process.resourcesPath, '.env.production')
+
+    const envContent = Object.entries(config)
+      .map(([key, value]) => `${key}=${value}`)
+      .join('\n')
+
+    try {
+      fs.writeFileSync(envPath, envContent)
+      // Update current process env
+      Object.assign(process.env, config)
+      return { success: true }
+    } catch (error) {
+      console.error('Failed to save config:', error)
+      return { success: false, error: error.message }
+    }
+  })
+
+  ipcMain.on('recording-state-changed', (event, newIsRecording) => {
+    isRecording = newIsRecording
+    updateTrayMenu()
+  })
+
+  if (!isDev) {
+    const next = require('next')
+    const nextApp = next({ dev: false, dir: path.join(__dirname, '../..') })
+    nextApp
+      .prepare()
+      .then(() => {
+        createWindow()
+        createTray()
+        registerGlobalShortcuts()
+
+        const server = require('http').createServer((req, res) => {
+          const handle = nextApp.getRequestHandler()
+          handle(req, res)
+        })
+
+        server.listen(3000, (err) => {
+          if (err) throw err
+          console.log('> Ready on http://localhost:3000')
+          mainWindow.loadURL('http://localhost:3000')
+        })
+      })
+      .catch((err) => {
+        console.error('Error starting Next.js server', err)
+      })
+  } else {
+    createWindow()
+    createTray()
+    registerGlobalShortcuts()
+  }
+})
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow()
+  }
 })
 
 app.on('window-all-closed', () => {

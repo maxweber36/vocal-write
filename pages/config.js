@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/router'
 import LoadingSpinner from '../src/components/ui/LoadingSpinner'
 
@@ -20,21 +20,33 @@ export default function Config() {
   const [messageType, setMessageType] = useState('') // 'success' or 'error'
 
   /**
-   * 加载当前配置
+   * 显示消息提示
    */
-  useEffect(() => {
-    loadConfig()
+  const showMessage = useCallback((msg, type) => {
+    setMessage(msg)
+    setMessageType(type)
+    setTimeout(() => {
+      setMessage('')
+      setMessageType('')
+    }, 3000)
   }, [])
 
   /**
-   * 从服务器加载配置信息
+   * 从主进程加载配置信息
    */
-  const loadConfig = async () => {
+  const loadConfig = useCallback(async () => {
     try {
-      const response = await fetch('/api/config')
-      if (response.ok) {
-        const data = await response.json()
+      if (window.electron) {
+        const data = await window.electron.invoke('get-config')
         setConfig(data)
+      } else {
+        console.warn('Electron API not available, running in browser mode.')
+        // Fallback for browser development if needed
+        const response = await fetch('/api/config')
+        if (response.ok) {
+          const data = await response.json()
+          setConfig(data)
+        }
       }
     } catch (error) {
       console.error('加载配置失败:', error)
@@ -42,7 +54,14 @@ export default function Config() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [showMessage])
+
+  /**
+   * 加载当前配置
+   */
+  useEffect(() => {
+    loadConfig()
+  }, [loadConfig])
 
   /**
    * 处理输入框变化
@@ -57,22 +76,32 @@ export default function Config() {
   /**
    * 保存配置
    */
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     setSaving(true)
     try {
-      const response = await fetch('/api/config', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(config),
-      })
-
-      if (response.ok) {
-        showMessage('配置保存成功！', 'success')
+      if (window.electron) {
+        const result = await window.electron.invoke('save-config', config)
+        if (result.success) {
+          showMessage('配置保存成功！', 'success')
+        } else {
+          showMessage(result.error || '保存失败', 'error')
+        }
       } else {
-        const error = await response.json()
-        showMessage(error.message || '保存失败', 'error')
+        console.warn('Electron API not available, running in browser mode.')
+        // Fallback for browser development if needed
+        const response = await fetch('/api/config', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(config),
+        })
+        if (response.ok) {
+          showMessage('配置保存成功！', 'success')
+        } else {
+          const error = await response.json()
+          showMessage(error.message || '保存失败', 'error')
+        }
       }
     } catch (error) {
       console.error('保存配置失败:', error)
@@ -80,19 +109,11 @@ export default function Config() {
     } finally {
       setSaving(false)
     }
-  }
+  }, [config, showMessage])
 
   /**
    * 显示消息提示
    */
-  const showMessage = (msg, type) => {
-    setMessage(msg)
-    setMessageType(type)
-    setTimeout(() => {
-      setMessage('')
-      setMessageType('')
-    }, 3000)
-  }
 
   /**
    * 返回主页
