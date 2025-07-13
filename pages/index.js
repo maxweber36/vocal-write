@@ -140,10 +140,10 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-between min-h-screen bg-gray-100 text-gray-700 p-4 sm:p-6 md:p-8">
       {/* 拖拽区域 */}
-      <div
+      {/* <div
         className="fixed top-0 left-0 w-full h-25 z-50"
         style={{ WebkitAppRegion: 'drag' }}
-      ></div>
+      ></div> */}
 
       <main className="flex flex-col w-full flex-1 items-center">
         <div className="flex flex-col p-4 max-w-3xl w-full ">
