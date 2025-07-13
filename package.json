@@ -45,18 +45,20 @@
   },
   "build": {
     "appId": "com.vocal-write.app",
-    "productName": "Vocal Write",
+    "productName": "快记说",
     "directories": {
       "output": "dist"
     },
     "files": [
       "src/main/**/*",
       "out/**/*",
-      "node_modules/**/*"
+      "package.json"
     ],
     "mac": {
       "category": "public.app-category.productivity"
     },
+    "asar": true,
+    "compression": "normal",
     "extraResources": [
       {
         "from": "src/assets",
