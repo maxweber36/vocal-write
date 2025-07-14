@@ -148,8 +148,8 @@ function updateTrayMenu() {
       },
     },
     {
-      label: isRecording ? '停止录音 (⌘+R)' : '开始录音 (⌘+R)',
-      accelerator: 'Command+R',
+      label: isRecording ? '停止录音 (⌥+R)' : '开始录音 (⌥+R)',
+      accelerator: 'Option+R',
       click: () => {
         toggleRecording()
       },
@@ -173,7 +173,7 @@ function updateTrayMenu() {
 function registerGlobalShortcuts() {
   // 注册 Option+Space 热键
   // 注册 Command+R 热键
-  const ret = globalShortcut.register('Command+R', () => {
+  const ret = globalShortcut.register('Option+R', () => {
     toggleRecording()
   })
 
