@@ -150,7 +150,7 @@ export default function Home() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-1xl sm:text-3xl font-bold text-blue-500">
-                快记说
+                声笔
               </h1>
               <p className="text-sm sm:text-base text-gray-500 mt-3">
                 语音一说即录，文字一键即贴

@@ -47,7 +47,7 @@
   },
   "build": {
     "appId": "com.vocal-write.app",
-    "productName": "快记说",
+    "productName": "声笔",
     "directories": {
       "output": "dist"
     },
