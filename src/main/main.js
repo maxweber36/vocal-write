@@ -47,6 +47,12 @@ function createWindow() {
     // In production, the URL is loaded in the whenReady event, after the Next.js server has started.
   }
 
+  // 监听窗口关闭事件，隐藏到托盘而不是退出应用
+  mainWindow.on('close', (event) => {
+    event.preventDefault()
+    mainWindow.hide()
+  })
+
   mainWindow.on('closed', () => {
     mainWindow = null
   })
