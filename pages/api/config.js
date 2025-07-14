@@ -11,13 +11,8 @@ const CONFIG_FILE_PATH = path.join(process.cwd(), '.env.local')
  * 支持GET和POST方法来读取和保存配置
  */
 export default function handler(req, res) {
-  // In production, this API route should not be used.
-  // Config is managed by the main process via IPC.
-  if (process.env.NODE_ENV === 'production') {
-    return res.status(418).json({
-      message: "I'm a teapot. This API is not meant for production use.",
-    })
-  }
+  // This API route is used for browser-based development
+  // In Electron app, config is managed by the main process via IPC
 
   if (req.method === 'GET') {
     return handleGetConfig(req, res)
