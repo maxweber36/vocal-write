@@ -274,6 +274,9 @@ app.whenReady().then(() => {
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow()
+  } else {
+    // 总是显示主窗口
+    showMainWindow()
   }
 })
 
