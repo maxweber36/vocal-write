@@ -252,7 +252,7 @@ export default function Home() {
             {/* 录音状态和时长显示 */}
             <div className="flex flex-col items-center gap-3">
               <p className="text-sm text-gray-500">
-                {isRecording ? '录音中' : '点击开始录音'}
+                {isRecording ? '录音中' : '开始录音'}
               </p>
               {isRecording && (
                 <RecordingProgressBar

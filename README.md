@@ -107,7 +107,7 @@
    # 或
    yarn dev
    ```
-   访问 [http://localhost:3000](http://localhost:3000)
+   访问 [http://localhost:3001](http://localhost:3001)
 
 ## 代码规范
 
