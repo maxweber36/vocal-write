@@ -6,7 +6,7 @@ const RecordingButton = ({ onClick, isRecording }) => {
       className={`relative w-10 h-10 rounded-full transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-opacity-50 ${
         isRecording
           ? 'bg-red-500 hover:bg-red-600 focus:ring-red-400'
-          : 'bg-sky-500 hover:bg-sky-600 focus:ring-sky-400'
+          : 'bg-sky-500 hover:bg-[#1C53A8] focus:ring-sky-400'
       }`}
     >
       <svg

@@ -161,7 +161,7 @@ export default function Home() {
         <div className="flex flex-col p-4 max-w-3xl w-full ">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-1xl sm:text-3xl font-bold text-blue-500">
+              <h1 className="text-1xl sm:text-3xl font-bold text-[#1C53A8]">
                 声笔
               </h1>
               <p className="text-sm sm:text-base text-gray-500 mt-3">
@@ -213,6 +213,7 @@ export default function Home() {
                 <button
                   onClick={handleCopy}
                   className="absolute bottom-2 right-2 p-2 rounded-md hover:bg-gray-100 focus:outline-none"
+                  title="复制"
                 >
                   <Image
                     src={copyIcon}
@@ -227,6 +228,7 @@ export default function Home() {
                   onClick={() => handlePolishText(polishedTranscript)}
                   className="absolute bottom-2 right-10 p-2 rounded-md hover:bg-gray-100 focus:outline-none"
                   disabled={isPolishing}
+                  title="润色"
                 >
                   <Image
                     src={polishIcon}

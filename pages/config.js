@@ -141,7 +141,7 @@ export default function Config() {
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
         {/* 头部 */}
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">API 配置</h1>
+          <h1 className="text-2xl font-bold text-[#1C53A8]">API 配置</h1>
           <button
             onClick={handleBack}
             className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors"

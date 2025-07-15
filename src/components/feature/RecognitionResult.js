@@ -17,7 +17,7 @@ const RecognitionResult = ({
         </div>
       ) : showEditableTextarea ? (
         <textarea
-          className="w-full h-full bg-transparent focus:outline-none resize-none"
+          className="w-full h-full bg-transparent focus:outline-none resize-none text-sky-500"
           value={polishedTranscript}
           onChange={onPolishedTranscriptChange}
         />
