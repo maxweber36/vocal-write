@@ -5,7 +5,7 @@ import copyIcon from '../src/assets/icon-copy.png'
 import polishIcon from '../src/assets/icon-polish-text.png'
 
 import { useAsr, MAX_RECORDING_DURATION } from '../hooks/useAsr'
-import Button from '../src/components/ui/Button'
+import RecordingButton from '../src/components/ui/RecordingButton'
 import Footer from '../src/components/layout/Footer'
 import RecognitionResult from '../src/components/feature/RecognitionResult'
 import RecordingProgressBar from '../src/components/ui/RecordingProgressBar'
@@ -247,7 +247,10 @@ export default function Home() {
           )}
 
           <div className="flex flex-col items-center gap-4 mt-10">
-            <Button onClick={toggleRecording} isRecording={isRecording} />
+            <RecordingButton
+              onClick={toggleRecording}
+              isRecording={isRecording}
+            />
 
             {/* 录音状态和时长显示 */}
             <div className="flex flex-col items-center gap-3">

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Button = ({ onClick, isRecording }) => {
+const RecordingButton = ({ onClick, isRecording }) => {
   return (
     <button
       onClick={onClick}
@@ -35,4 +35,4 @@ const Button = ({ onClick, isRecording }) => {
   )
 }
 
-export default Button
+export default RecordingButton
