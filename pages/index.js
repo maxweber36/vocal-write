@@ -61,6 +61,18 @@ export default function Home() {
 
       const data = await response.json()
       setPolishedTranscript(data.polishedText)
+
+      // 润色完成后自动复制到剪切板
+      if (data.polishedText) {
+        navigator.clipboard.writeText(data.polishedText).then(
+          () => {
+            setShowCopySuccess(true)
+          },
+          (err) => {
+            console.error('Could not copy text: ', err)
+          }
+        )
+      }
     } catch (error) {
       alert(error.message)
       // 润色失败时，将被原始文本设置为可编辑
