@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import copyIcon from '../src/assets/icon-copy.png'
@@ -16,7 +16,6 @@ export default function Home() {
     transcript,
     interimTranscript,
     isRecording,
-    audioLevel,
     error,
     recordingDuration,
     toggleRecording: asrToggleRecording,

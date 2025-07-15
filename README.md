@@ -109,6 +109,30 @@
    ```
    访问 [http://localhost:3001](http://localhost:3001)
 
+## 打包构建
+
+### 开发环境
+
+```bash
+npm run dev
+```
+
+### 生产构建
+
+```bash
+# 格式化代码
+npm run format
+
+# 构建应用
+npm run electron-pack
+```
+
+### 应用图标
+
+- macOS 应用图标：`src/assets/app-icon.icns`
+- 系统托盘图标：`src/assets/tray-icon.png`
+- 构建时会自动使用 `app-icon.icns` 作为程序坞图标
+
 ## 代码规范
 
 - 提交前建议执行 `npm run format` 保持代码风格统一。
