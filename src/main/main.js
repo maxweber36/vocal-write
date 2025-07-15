@@ -43,7 +43,7 @@ function createWindow() {
   })
 
   if (isDev) {
-    mainWindow.loadURL('http://localhost:3000')
+    mainWindow.loadURL('http://localhost:3001')
   } else {
     // In production, the URL is loaded in the whenReady event, after the Next.js server has started.
   }

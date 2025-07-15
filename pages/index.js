@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import copyIcon from '../src/assets/icon-copy.png'
@@ -8,6 +8,7 @@ import { useAsr, MAX_RECORDING_DURATION } from '../hooks/useAsr'
 import Button from '../src/components/ui/Button'
 import Footer from '../src/components/layout/Footer'
 import RecognitionResult from '../src/components/feature/RecognitionResult'
+import RecordingProgressBar from '../src/components/ui/RecordingProgressBar'
 
 export default function Home() {
   const router = useRouter()
@@ -186,9 +187,8 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="w-full max-w flex flex-col items-center justify-center">
+        <div className="w-full max-w-3xl flex flex-col items-center justify-center">
           <div className="w-full relative">
-            {' '}
             {/* 添加 relative */}
             <RecognitionResult
               transcript={transcript}
@@ -243,39 +243,11 @@ export default function Home() {
                 {isRecording ? '录音中' : '点击开始录音'}
               </p>
               {isRecording && (
-                <div className="flex flex-col items-center gap-2 w-80">
-                  {/* 进度条容器 - 时间显示在两侧 */}
-                  <div className="flex items-center gap-3 w-full">
-                    {/* 左侧时间显示 */}
-                    <span className="text-gray-600 font-mono text-xs min-w-[2.5rem]">
-                      {formatDuration(recordingDuration)}
-                    </span>
-
-                    {/* 中间进度条 */}
-                    <div className="flex-1 bg-gray-200 rounded-full h-2 relative overflow-hidden">
-                      {/* 进度条背景 */}
-                      <div
-                        className="h-full bg-gradient-to-r from-sky-400 to-rose-400 rounded-full transition-all duration-300 ease-out"
-                        style={{
-                          width: `${Math.min((recordingDuration / MAX_RECORDING_DURATION) * 100, 100)}%`,
-                        }}
-                      ></div>
-                      {/* 闪烁指示器 */}
-                      <div
-                        className="absolute top-0 w-1 h-full bg-white shadow-lg animate-pulse"
-                        style={{
-                          left: `${Math.min((recordingDuration / MAX_RECORDING_DURATION) * 100, 100)}%`,
-                          transform: 'translateX(-50%)',
-                        }}
-                      ></div>
-                    </div>
-
-                    {/* 右侧时间显示 */}
-                    <span className="text-gray-400 font-mono text-xs min-w-[2.5rem]">
-                      10:00
-                    </span>
-                  </div>
-                </div>
+                <RecordingProgressBar
+                  recordingDuration={recordingDuration}
+                  maxDuration={MAX_RECORDING_DURATION}
+                  formatDuration={formatDuration}
+                />
               )}
             </div>
           </div>

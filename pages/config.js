@@ -282,7 +282,6 @@ export default function Config() {
               )用于文本润色功能
             </li>
             <li>• 所有配置信息仅存储在本地，确保数据安全</li>
-            <li>• 修改配置后需要重启应用才能生效</li>
           </ul>
         </div>
       </div>
