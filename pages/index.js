@@ -157,48 +157,46 @@ export default function Home() {
         style={{ WebkitAppRegion: 'drag' }}
       ></div> */}
 
-      <main className="flex flex-col w-full flex-1 items-center">
-        <div className="flex flex-col p-4 max-w-3xl w-full ">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-1xl sm:text-3xl font-bold text-[#1C53A8]">
-                声笔
-              </h1>
-              <p className="text-sm sm:text-base text-gray-500 mt-3">
-                语音一说即录，文字一键即贴
-              </p>
-            </div>
-            <button
-              onClick={handleGoToConfig}
-              className="p-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-              style={{ WebkitAppRegion: 'no-drag' }}
-              title="API配置"
-            >
-              <svg
-                className="w-5 h-5 text-gray-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                ></path>
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                ></path>
-              </svg>
-            </button>
+      <main className="flex flex-col w-full max-w-3xl flex-1 items-center">
+        <div className="flex w-full items-center justify-between">
+          <div className="flex flex-col p-4 w-full ">
+            <h1 className="text-1xl sm:text-3xl font-bold text-[#1C53A8]">
+              声笔
+            </h1>
+            <p className="text-sm sm:text-base text-gray-500 mt-3">
+              语音一说即录，文字一键即贴
+            </p>
           </div>
+          <button
+            onClick={handleGoToConfig}
+            className="p-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+            style={{ WebkitAppRegion: 'no-drag' }}
+            title="API配置"
+          >
+            <svg
+              className="w-5 h-5 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+              ></path>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              ></path>
+            </svg>
+          </button>
         </div>
 
-        <div className="w-full max-w-3xl flex flex-col items-center justify-center">
+        <div className="w-full flex flex-col items-center justify-center">
           <div className="w-full relative">
             {/* 添加 relative */}
             <RecognitionResult
